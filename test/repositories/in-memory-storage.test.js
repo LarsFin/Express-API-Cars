@@ -1,11 +1,10 @@
 const DB = require('../../lib/repositories/in-memory-storage.js');
-const CM = require('../../lib/models/car.js');
 
 let dbContext,
     carMock;
 
 beforeEach(() => {
-  carMock = CM;
+  carMock = jest.fn();
   dbContext = new DB(carMock);
 });
 
@@ -43,7 +42,7 @@ describe("add car tests", () => {
             'year': year
           };
 
-    carMock = jest.fn(() => expected);
+    dbContext._buildCar = jest.fn(() => expected);
 
     expect(carMock).not.toHaveBeenCalled();
 
@@ -51,8 +50,8 @@ describe("add car tests", () => {
 
     const actual = dbContext.addCar(carData);
 
-    expect(carMock).toHaveBeenCalledTimes(1);
-    expect(carMock).toHaveBeenCalledWith(id, make, model, colour, year);
+    expect(dbContext._buildCar).toHaveBeenCalledTimes(1);
+    expect(dbContext._buildCar).toHaveBeenCalledWith(id, make, model, colour, year);
 
     expect(dbContext._cars.length).toBe(1);
 
@@ -62,14 +61,14 @@ describe("add car tests", () => {
   test("Id is automatically incremented on each creation", () => {
     const repeats = 3;
 
-    carMock = jest.fn(() => expected);
+    dbContext._buildCar = jest.fn();
 
     for (let i = 0; i < repeats; i++) {
       const actual = dbContext.addCar(carData);
 
-      expect(carMock).toHaveBeenCalledWith(i + 1, make, model, colour, year);
+      expect(dbContext._buildCar).toHaveBeenCalledWith(i + 1, make, model, colour, year);
     }
 
-    expect(carMock).toHaveBeenCalledTimes(repeats);
+    expect(dbContext._buildCar).toHaveBeenCalledTimes(repeats);
   });
 });
