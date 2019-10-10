@@ -1,6 +1,7 @@
 const CarService = require('./lib/services/car-service.js');
 const InMemDB = require('./lib/repositories/in-memory-storage.js');
 const MessageFactory = require('./lib/helpers/message-factory.js');
+const CarModel = require('./lib/models/car.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -13,7 +14,7 @@ app.use(bodyParser.json());
 const messageFactory = new MessageFactory();
 
 // Repository
-const dbContext = new InMemDB();
+const dbContext = new InMemDB(CarModel);
 
 // Services
 const carService = new CarService(dbContext, messageFactory);
