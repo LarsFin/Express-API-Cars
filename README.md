@@ -25,7 +25,7 @@ Afterwards will look into persistent storage with database.
 
 Follows the CRUD model pattern with create/read/update and delete.
 
-Can retrieve all of my cars [ ]
+Can retrieve all of my cars [✓]
 ```
 As a car collector,
 So, that I can marvel at my collection,
