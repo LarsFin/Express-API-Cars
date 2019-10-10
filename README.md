@@ -32,7 +32,7 @@ So, that I can marvel at my collection,
 I would like to to read a list of all of my cars
 ```
 
-Can add a car [ ]
+Can add a car [✓]
 ```
 As a car collector,
 So, that I can note a new car down,

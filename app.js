@@ -28,7 +28,8 @@ app.get('/cars/', (req, res) => {
 
 app.post('/cars/', (req, res) => {
   let data = carService.addCar(req.body);
-  res.send();
-})
+  res.status(data.code);
+  res.send(data.body);
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
