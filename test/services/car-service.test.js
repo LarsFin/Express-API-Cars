@@ -2,6 +2,7 @@ const dbPath = '../../lib/repositories/in-memory-storage.js',
       mfPath = '../../lib/helpers/message-factory.js';
 
 const constants = require('../../lib/common/constants.js');
+const ArgumentError = require('../../lib/common/argument-error.js');
 const CS = require('../../lib/services/car-service.js');
 const DB = require(dbPath);
 const MF = require(mfPath);
@@ -69,7 +70,7 @@ describe("get all tests", () => {
 });
 
 describe("add car tests", () => {
-  make = "Audi",
+  const make = "Audi",
         model = "Flashy car",
         colour = "Silver",
         year = 1999,
@@ -125,5 +126,27 @@ describe("add car tests", () => {
 
     expect(messageFactoryMock.handleError).toHaveBeenCalledTimes(1);
     expect(messageFactoryMock.handleError).toHaveBeenCalledWith(error);
+  });
+
+  test("Returns bad request from invalid year given", () => {
+    const invalidYear = "A year!",
+          invalidCarData = {
+            'make': make,
+            'model': model,
+            'colour': colour,
+            'year': invalidYear
+          },
+          expected = {
+            'code': constants.HttpStatusCodes.BadRequest,
+            'body': constants.UserFeedback.AddCarInvalidYear
+          };
+
+    dbContextMock.addCar = jest.fn(() => {
+      throw new ArgumentError();
+    });
+
+    const actual = carService.addCar(invalidCarData);
+
+    expect(actual).toMatchObject(expected);
   });
 });

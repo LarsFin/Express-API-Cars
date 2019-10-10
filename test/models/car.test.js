@@ -8,13 +8,14 @@ describe("car model tests", () => {
         colour = "Pink";
 
   it("Should return a car model object", () => {
-    const year = 2004,
+    const year = "2004",
+          intYear = 2004,
           expected = {
             'id': id,
             'make': make,
             'model': model,
             'colour': colour,
-            'year': year
+            'year': intYear
           };
 
     const actual = carModel(id, make, model, colour, year);
