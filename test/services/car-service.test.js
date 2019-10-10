@@ -101,7 +101,7 @@ describe("add car tests", () => {
     const actual = carService.addCar(carData);
 
     expect(messageFactoryMock.buildResponse).toHaveBeenCalledTimes(1);
-    expect(messageFactoryMock.buildResponse).toHaveBeenCalledWith(constants.HttpStatusCodes.Created, createdCar);
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledWith(constants.HttpStatusCodes.Created, result);
 
     expect(actual).toMatchObject(expected);
   });
