@@ -20,6 +20,30 @@ describe("get all tests", () => {
   });
 });
 
+describe("get car tests", () => {
+  test("Return specific car via passed id", () => {
+    const id = 4,
+          car1 = { 'id': 1 },
+          car2 = { 'id': 2 },
+          expected = { 'id': id },
+          car3 = { 'id': 5 }
+
+    dbContext._cars = [car1, car2, expected, car3];
+
+    const actual = dbContext.getCar(id);
+
+    expect(actual).toBe(expected);
+  });
+
+  test("Returns undefined if non-existant id given", () => {
+    const id = 99;
+
+    const actual = dbContext.getCar(id);
+
+    expect(actual).toBeUndefined();
+  });
+})
+
 describe("add car tests", () => {
   const make = 'Tesla',
         model = 'S Series',
