@@ -142,7 +142,7 @@ describe("get car tests", () => {
                                                                   constants.UserFeedback.GetCarNotFound);
 
     expect(actual).toMatchObject(expected);
-  })
+  });
 });
 
 describe("add car tests", () => {
