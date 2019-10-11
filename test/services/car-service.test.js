@@ -303,7 +303,7 @@ describe("delete car tests", () => {
     const actual = carService.deleteCar(id);
 
     expect(messageFactoryMock.handleError).toHaveBeenCalledTimes(1);
-    expect(httpMessageFactory.handleError).toHaveBeenCalledWith(error);
+    expect(messageFactoryMock.handleError).toHaveBeenCalledWith(error);
   });
 
   test("Return Bad Request from invalid id", () => {
