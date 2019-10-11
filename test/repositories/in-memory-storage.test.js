@@ -110,7 +110,7 @@ describe("add car tests", () => {
 describe("delete car tests", () => {
   test("Remove car with specific id from storage", () => {
     const id = '4',
-          intId = 4,
+          intId = Number(id),
           car1 = { 'id': 1 },
           car2 = { 'id': 2 },
           car3 = { 'id': intId },
@@ -141,6 +141,63 @@ describe("delete car tests", () => {
     const invalidId = '3489.9';
 
     const wrapper = (() => dbContext.deleteCar(invalidId));
+
+    expect(wrapper).toThrowError(ArgumentError);
+  });
+});
+
+describe("update car test", () => {
+  test("Return updated car", () => {
+    const id = '3',
+          intId = Number(id),
+          oldMake = 'old-make',
+          newMake = 'new-make',
+          oldModel = 'old-model',
+          newModel = 'new-model',
+          colour = 'colour',
+          year = 2015,
+          car1 = { 'id': 1 },
+          car2 = { 'id': 2 },
+          car3 = {
+            'id': intId,
+            'make': oldMake,
+            'model': oldModel,
+            'year': year
+          },
+          car4 = { 'id': 5 },
+          updateData = {
+            'newMake': 'new-make',
+            'newModel': 'new-model',
+            'colour': 'colour',
+            'year': 2015
+          },
+          expected = {
+            'id': intId,
+            'newMake': 'new-make',
+            'newModel': 'new-model',
+            'colour': 'colour',
+            'year': 2015
+          };
+
+    dbContext._cars = [car1, car2, car3, car4];
+
+    const actual = dbContext.updateCar(id, updateData);
+
+    expect(actual).toMatchObject(expected);
+  });
+
+  test("Return undefined if car could not be found", () => {
+    const id = '99';
+
+    const actual = dbContext.updateCar(id);
+
+    expect(actual).toBeUndefined();
+  });
+
+  test("Throw ArgumentError from invalid id given", () => {
+    const invalidId = 'alphanumeric9';
+
+    const wrapper = (() => dbContext.updateCar(invalidId));
 
     expect(wrapper).toThrowError(ArgumentError);
   });
