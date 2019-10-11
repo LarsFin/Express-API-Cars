@@ -44,7 +44,7 @@ app.delete('/cars/:carId', (req, res) => {
   res.send(data.body);
 });
 
-app.update('/cars/:carId', (req, res) => {
+app.put('/cars/:carId', (req, res) => {
   const data = carService.updateCar(req.params.carId, req.body);
   res.status(data.code);
   res.send(data.body);

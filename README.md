@@ -53,7 +53,7 @@ So, that I can maintain an orderly collection,
 I would like to remove a specific car from my collection
 ```
 
-Can update a car [ ]
+Can update a car [✓]
 ```
 As a car collector,
 So, that I can keep my car data up to date,
