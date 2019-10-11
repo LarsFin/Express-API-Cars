@@ -21,13 +21,19 @@ const carService = new CarService(dbContext, messageFactory);
 
 // Routes
 app.get('/cars/', (req, res) => {
-  let data = carService.getCars();
+  const data = carService.getCars();
+  res.status(data.code);
+  res.send(data.body);
+});
+
+app.get('/cars/:carId', (req, res) => {
+  const data = carService.getCar(req.params.carId);
   res.status(data.code);
   res.send(data.body);
 });
 
 app.post('/cars/', (req, res) => {
-  let data = carService.addCar(req.body);
+  const data = carService.addCar(req.body);
   res.status(data.code);
   res.send(data.body);
 });
