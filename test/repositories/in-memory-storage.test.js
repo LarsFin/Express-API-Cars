@@ -1,4 +1,5 @@
 const DB = require('../../lib/repositories/in-memory-storage.js');
+const ArgumentError = require('../../lib/common/argument-error.js');
 
 let dbContext,
     carMock;
@@ -22,10 +23,11 @@ describe("get all tests", () => {
 
 describe("get car tests", () => {
   test("Return specific car via passed id", () => {
-    const id = 4,
+    const id = '4',
+          intId = 4,
           car1 = { 'id': 1 },
           car2 = { 'id': 2 },
-          expected = { 'id': id },
+          expected = { 'id': intId },
           car3 = { 'id': 5 }
 
     dbContext._cars = [car1, car2, expected, car3];
@@ -36,13 +38,21 @@ describe("get car tests", () => {
   });
 
   test("Returns undefined if non-existant id given", () => {
-    const id = 99;
+    const id = '99';
 
     const actual = dbContext.getCar(id);
 
     expect(actual).toBeUndefined();
   });
-})
+
+  test("Throw ArgumentError from invalid id given", () => {
+    const invalidId = '4.359';
+
+    const wrapper = (() => dbContext.getCar(invalidId));
+
+    expect(wrapper).toThrowError(ArgumentError);
+  });
+});
 
 describe("add car tests", () => {
   const make = 'Tesla',

@@ -39,7 +39,7 @@ So, that I can note a new car down,
 I would like to be able to add a car to my collection
 ```
 
-Can retrieve a car [ ]
+Can retrieve a car [✓]
 ```
 As a car collector,
 So, that I can inspect one of my cars,

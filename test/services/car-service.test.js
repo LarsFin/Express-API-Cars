@@ -143,12 +143,35 @@ describe("get car tests", () => {
 
     expect(actual).toMatchObject(expected);
   });
+
+  test("Returns bad request from invalid id in url", () => {
+    const invalidId = 'AE0X',
+          expected = {
+            'code': constants.HttpStatusCodes.BadRequest,
+            'body': constants.UserFeedback.GetCarInvalidId
+          };
+
+    messageFactoryMock.buildResponse = jest.fn(() => expected);
+    dbContextMock.getCar = jest.fn(() => {
+      throw new ArgumentError();
+    });
+
+    expect(messageFactoryMock.buildResponse).not.toHaveBeenCalled();
+
+    const actual = carService.getCar(invalidId);
+
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledTimes(1);
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledWith(constants.HttpStatusCodes.BadRequest,
+                                                                  constants.UserFeedback.GetCarInvalidId);
+
+    expect(actual).toMatchObject(expected);
+  });
 });
 
 describe("add car tests", () => {
-  const make = "Audi",
-        model = "Flashy car",
-        colour = "Silver",
+  const make = 'Audi',
+        model = 'Flashy car',
+        colour = 'Silver',
         year = 1999,
         carData = {
           'make': make,
@@ -184,7 +207,7 @@ describe("add car tests", () => {
   });
 
   test("Returns error response", () => {
-    const errorMessage = "Error message",
+    const errorMessage = 'Error message',
           error = new Error(errorMessage),
           expected = {
             'code': constants.HttpStatusCodes.InternalServerError,
@@ -207,7 +230,7 @@ describe("add car tests", () => {
   });
 
   test("Returns bad request from invalid year given", () => {
-    const invalidYear = "A year!",
+    const invalidYear = 'A year!',
           invalidCarData = {
             'make': make,
             'model': model,
@@ -219,11 +242,18 @@ describe("add car tests", () => {
             'body': constants.UserFeedback.AddCarInvalidYear
           };
 
+    messageFactoryMock.buildResponse = jest.fn(() => expected);
     dbContextMock.addCar = jest.fn(() => {
       throw new ArgumentError();
     });
 
+    expect(messageFactoryMock.buildResponse).not.toHaveBeenCalled();
+
     const actual = carService.addCar(invalidCarData);
+
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledTimes(1);
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledWith(constants.HttpStatusCodes.BadRequest,
+                                                                  constants.UserFeedback.AddCarInvalidYear);
 
     expect(actual).toMatchObject(expected);
   });
