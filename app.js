@@ -38,4 +38,10 @@ app.post('/cars/', (req, res) => {
   res.send(data.body);
 });
 
+app.delete('/cars/:carId', (req, res) => {
+  const data = carService.deleteCar(req.params.carId);
+  res.status(data.code);
+  res.send(data.body);
+});
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

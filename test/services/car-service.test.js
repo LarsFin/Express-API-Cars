@@ -127,7 +127,7 @@ describe("get car tests", () => {
     const result = undefined,
           expected = {
             'code': constants.HttpStatusCodes.NotFound,
-            'body': constants.UserFeedback.GetCarNotFound
+            'body': constants.UserFeedback.CarNotFound
           };
 
     messageFactoryMock.buildResponse = jest.fn(() => expected);
@@ -139,7 +139,7 @@ describe("get car tests", () => {
 
     expect(messageFactoryMock.buildResponse).toHaveBeenCalledTimes(1);
     expect(messageFactoryMock.buildResponse).toHaveBeenCalledWith(constants.HttpStatusCodes.NotFound,
-                                                                  constants.UserFeedback.GetCarNotFound);
+                                                                  constants.UserFeedback.CarNotFound);
 
     expect(actual).toMatchObject(expected);
   });
@@ -148,7 +148,7 @@ describe("get car tests", () => {
     const invalidId = 'AE0X',
           expected = {
             'code': constants.HttpStatusCodes.BadRequest,
-            'body': constants.UserFeedback.GetCarInvalidId
+            'body': constants.UserFeedback.InvalidCarId
           };
 
     messageFactoryMock.buildResponse = jest.fn(() => expected);
@@ -162,7 +162,7 @@ describe("get car tests", () => {
 
     expect(messageFactoryMock.buildResponse).toHaveBeenCalledTimes(1);
     expect(messageFactoryMock.buildResponse).toHaveBeenCalledWith(constants.HttpStatusCodes.BadRequest,
-                                                                  constants.UserFeedback.GetCarInvalidId);
+                                                                  constants.UserFeedback.InvalidCarId);
 
     expect(actual).toMatchObject(expected);
   });
@@ -254,6 +254,96 @@ describe("add car tests", () => {
     expect(messageFactoryMock.buildResponse).toHaveBeenCalledTimes(1);
     expect(messageFactoryMock.buildResponse).toHaveBeenCalledWith(constants.HttpStatusCodes.BadRequest,
                                                                   constants.UserFeedback.AddCarInvalidYear);
+
+    expect(actual).toMatchObject(expected);
+  });
+});
+
+describe("delete car tests", () => {
+  const id = 1;
+
+  test("Delete car from dbContext and populate response", () => {
+    const expected = {
+      'code': constants.HttpStatusCodes.Ok,
+      'body': constants.UserFeedback.DeleteCarSuccess
+    };
+
+    dbContextMock.deleteCar = jest.fn(() => true);
+    messageFactoryMock.buildResponse = jest.fn(() => expected);
+
+    expect(messageFactoryMock.buildResponse).not.toHaveBeenCalled();
+    expect(dbContextMock.deleteCar).not.toHaveBeenCalled();
+
+    const actual = carService.deleteCar(id);
+
+    expect(dbContextMock.deleteCar).toHaveBeenCalledWith(id);
+
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledTimes(1);
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledWith(constants.HttpStatusCodes.Ok,
+                                                                  constants.UserFeedback.DeleteCarSuccess);
+
+    expect(actual).toMatchObject(expected);
+  });
+
+  test("Return Error response", () => {
+    const errorMessage = "Error message",
+          error = new Error(errorMessage),
+          expected = {
+            'code': constants.HttpStatusCodes.InternalServerError,
+            'body': errorMessage
+          };
+
+    messageFactoryMock.handleError = jest.fn(() => expected);
+    dbContextMock.deleteCar = jest.fn(() => {
+      throw error;
+    });
+
+    expect(messageFactoryMock.handleError).not.toHaveBeenCalled();
+
+    const actual = carService.deleteCar(id);
+
+    expect(messageFactoryMock.handleError).toHaveBeenCalledTimes(1);
+    expect(httpMessageFactory.handleError).toHaveBeenCalledWith(error);
+  });
+
+  test("Return Bad Request from invalid id", () => {
+    const invalidId = "words",
+          expected = {
+            'code': constants.HttpStatusCodes.BadRequest,
+            'body': constants.UserFeedback.InvalidCarId
+          };
+
+    messageFactoryMock.buildResponse = jest.fn(() => expected);
+    dbContextMock.deleteCar = jest.fn(() => {
+      throw new ArgumentError();
+    });
+
+    expect(messageFactoryMock.buildResponse).not.toHaveBeenCalled();
+
+    const actual = carService.deleteCar(id);
+
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledTimes(1);
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledWith(constants.HttpStatusCodes.BadRequest,
+                                                                  constants.UserFeedback.InvalidCarId);
+
+    expect(actual).toMatchObject(expected);
+  });
+
+  test("Return NotFound from non existant id", () => {
+    const nonExistantId = 99,
+          expected = {
+            'code': constants.HttpStatusCodes.NotFound,
+            'body': constants.UserFeedback.CarNotFound
+          };
+
+    dbContextMock.deleteCar = jest.fn(() => false);
+    messageFactoryMock.buildResponse = jest.fn(() => expected);
+
+    const actual = carService.deleteCar(id);
+
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledTimes(1);
+    expect(messageFactoryMock.buildResponse).toHaveBeenCalledWith(constants.HttpStatusCodes.NotFound,
+                                                                  constants.UserFeedback.CarNotFound);
 
     expect(actual).toMatchObject(expected);
   });
