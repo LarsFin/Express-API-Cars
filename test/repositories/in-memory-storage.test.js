@@ -166,15 +166,16 @@ describe("update car test", () => {
           },
           car4 = { 'id': 5 },
           updateData = {
-            'newMake': 'new-make',
-            'newModel': 'new-model',
+            'make': 'new-make',
+            'model': 'new-model',
             'colour': 'colour',
-            'year': 2015
+            'year': 2015,
+            'fake-data': 'fake-data'
           },
           expected = {
             'id': intId,
-            'newMake': 'new-make',
-            'newModel': 'new-model',
+            'make': 'new-make',
+            'model': 'new-model',
             'colour': 'colour',
             'year': 2015
           };
