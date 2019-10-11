@@ -106,3 +106,42 @@ describe("add car tests", () => {
     expect(dbContext._buildCar).toHaveBeenCalledTimes(repeats);
   });
 });
+
+describe("delete car tests", () => {
+  test("Remove car with specific id from storage", () => {
+    const id = '4',
+          intId = 4,
+          car1 = { 'id': 1 },
+          car2 = { 'id': 2 },
+          car3 = { 'id': intId },
+          car4 = { 'id': 5 }
+
+    dbContext._cars = [car1, car2, car3, car4];
+    const originalLength = dbContext._cars.length;
+
+    expect(dbContext._cars.length).toBe(originalLength)
+
+    const actual = dbContext.deleteCar(id);
+
+    expect(dbContext._cars.length).toBe(originalLength - 1);
+
+    expect(actual).toBeTruthy();
+    expect(dbContext._cars).not.toContain(car3);
+  });
+
+  test("Returns false if non-existant id given", () => {
+    const id = '99';
+
+    const actual = dbContext.deleteCar(id);
+
+    expect(actual).toBeFalsy();
+  });
+
+  test("Throw ArgumentError from invalid id given", () => {
+    const invalidId = '3489.9';
+
+    const wrapper = (() => dbContext.deleteCar(invalidId));
+
+    expect(wrapper).toThrowError(ArgumentError);
+  });
+});
