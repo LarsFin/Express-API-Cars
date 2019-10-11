@@ -46,7 +46,7 @@ So, that I can inspect one of my cars,
 I would like to read the data of a specific car
 ```
 
-Can delete a car [ ]
+Can delete a car [✓]
 ```
 As a car collector,
 So, that I can maintain an orderly collection,
